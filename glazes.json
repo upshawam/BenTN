@@ -1,0 +1,11 @@
+{
+  "brands": [
+    {
+      "id": "brand1",
+      "name": "Brand1",
+      "powderRatio": 1,
+      "waterRatio": 1,
+      "description": "Default 1:1 mixing ratio"
+    }
+  ]
+}

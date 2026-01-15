@@ -1,0 +1,80 @@
+/* Glaze-Inspired Color Theme */
+/* Extracted from pottery bowl with navy-to-turquoise gradient */
+
+:root {
+  /* Primary Colors - Blues from the glaze */
+  --navy-blue: #1a3a52;           /* Deep navy from darker side */
+  --ocean-blue: #2d5f7a;          /* Mid-tone transition */
+  --turquoise: #5ba8a8;           /* Lighter turquoise */
+  --aqua-light: #a0d5d5;          /* Lightest aqua highlights */
+  
+  /* Accent Colors */
+  --terracotta: #8b5a3c;          /* Clay/rim color */
+  --terracotta-light: #b8826d;    /* Lighter clay tone */
+  
+  /* Neutral Colors */
+  --cream: #f5f1e8;               /* Background/neutral */
+  --off-white: #fafaf7;           /* Lighter neutral */
+  --charcoal: #2c2c2c;            /* Dark text */
+  --gray-medium: #666666;         /* Secondary text */
+  
+  /* Semantic Color Applications */
+  --primary: var(--ocean-blue);
+  --primary-dark: var(--navy-blue);
+  --primary-light: var(--turquoise);
+  --accent: var(--terracotta);
+  --background: var(--cream);
+  --surface: var(--off-white);
+  --text-primary: var(--charcoal);
+  --text-secondary: var(--gray-medium);
+  
+  /* Interactive States */
+  --hover-primary: var(--turquoise);
+  --active-primary: var(--navy-blue);
+  --focus-outline: var(--ocean-blue);
+}
+
+/* Example Usage */
+body {
+  background-color: var(--background);
+  color: var(--text-primary);
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  color: var(--off-white);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: var(--hover-primary);
+}
+
+.btn-secondary {
+  background-color: var(--accent);
+  color: var(--off-white);
+}
+
+.card {
+  background-color: var(--surface);
+  border: 1px solid var(--aqua-light);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+}
+
+input, select {
+  border: 2px solid var(--aqua-light);
+  border-radius: 0.375rem;
+  padding: 0.5rem;
+  background-color: var(--off-white);
+}
+
+input:focus, select:focus {
+  outline: 2px solid var(--focus-outline);
+  border-color: var(--primary);
+}
