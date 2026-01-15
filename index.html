@@ -315,15 +315,18 @@
 
             <div class="form-group">
                 <label for="powder">Glaze Powder Amount <span id="unitLabel">(lbs)</span></label>
-                <input 
-                    type="number" 
-                    id="powder" 
-                    placeholder="Enter powder weight"
-                    min="0"
-                    step="0.01"
-                    inputmode="decimal"
-                    oninput="calculateWater()"
-                >
+                <div style="display: flex; gap: 0.5rem;">
+                    <input 
+                        type="number" 
+                        id="powder" 
+                        placeholder="Enter powder weight"
+                        min="0"
+                        step="0.01"
+                        inputmode="decimal"
+                        style="flex: 1;"
+                    >
+                    <button type="button" class="btn-primary" onclick="calculateWater()" style="padding: 1rem 1.25rem; white-space: nowrap;">Calculate</button>
+                </div>
                 <div class="unit-toggle" aria-label="Select unit">
                     <button type="button" id="btnLb" class="active" onclick="setUnit('lb')">Pounds (lb)</button>
                     <button type="button" id="btnG" onclick="setUnit('g')">Grams (g)</button>
