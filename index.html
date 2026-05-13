@@ -75,7 +75,7 @@
             font-weight: 500;
         }
 
-        select, input[type="number"] {
+        select, input[type="number"], input[type="text"] {
             width: 100%;
             padding: 1rem;
             border: 2px solid var(--aqua-light);
@@ -85,7 +85,7 @@
             transition: all 0.2s;
         }
 
-        select:focus, input[type="number"]:focus {
+        select:focus, input[type="number"]:focus, input[type="text"]:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(45, 95, 122, 0.1);
@@ -134,6 +134,18 @@
         .result-value .unit {
             font-size: 0.95rem;
             opacity: 0.85;
+        }
+
+        .result-value .number {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: var(--off-white);
+        }
+
+        .result-value .label-unit {
+            font-size: 0.85em;
+            font-weight: 500;
+            opacity: 0.9;
         }
 
         .info-box {
@@ -273,9 +285,43 @@
             gap: 1rem;
         }
 
+        .amount-fields-inline {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 0.75rem;
+            align-items: flex-start;
+        }
+
+        .amount-fields-inline .form-group {
+            margin-bottom: 0;
+            flex: 1 1 0;
+            min-width: 0;
+        }
+
+        .amount-fields-inline .form-group label {
+            white-space: nowrap;
+            font-size: 0.9rem;
+            line-height: 1.2;
+        }
+
+        .amount-fields-inline input[type="number"] {
+            padding: 0.85rem;
+            font-size: 0.95rem;
+            width: 100%;
+            min-width: 0;
+        }
+
         @media (max-width: 480px) {
             .form-group-inline {
                 grid-template-columns: 1fr;
+            }
+
+            .amount-fields-inline {
+                gap: 0.5rem;
+            }
+
+            .amount-fields-inline .form-group label {
+                font-size: 0.85rem;
             }
         }
 
@@ -304,51 +350,71 @@
 
         <div class="calculator-card">
             <div class="form-group">
-                <label for="brand">Glaze Brand</label>
+                <label for="brand">Glaze</label>
                 <div style="display: flex; gap: 0.5rem;">
-                    <select id="brand" onchange="updateRatio()" style="flex: 1;">
-                        <option value="">Select a brand...</option>
+                    <select id="brand" onchange="calculateWater()" style="flex: 1;">
+                        <option value="">Select a glaze...</option>
                     </select>
                     <button type="button" class="btn-tertiary" onclick="openAddBrandModal()" style="padding: 0.75rem; font-size: 1.25rem;" title="Add new brand">+</button>
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="powder">Glaze Powder Amount <span id="unitLabel">(lbs)</span></label>
-                <div style="display: flex; gap: 0.5rem;">
+                <label>Enter Powder Amount</label>
+                <div class="unit-toggle" aria-label="Select dry glaze input unit">
+                    <button type="button" id="btnPowderLbOz" class="active" onclick="setPowderInputUnit('lb-oz')">lbs</button>
+                    <button type="button" id="btnPowderG" onclick="setPowderInputUnit('g')">g</button>
+                </div>
+                <div id="powderLbOzFields" style="display: flex; gap: 0.5rem; align-items: flex-end; margin-top: 0.5rem;">
+                    <div style="flex: 1;">
+                        <label for="powderLb" style="font-size: 0.9rem; margin-bottom: 0.25rem;">Pounds</label>
+                        <input 
+                            type="number" 
+                            id="powderLb" 
+                            placeholder="0"
+                            min="0"
+                            step="0.1"
+                            inputmode="decimal"
+                        >
+                    </div>
+                    <div style="flex: 1;">
+                        <label for="powderOz" style="font-size: 0.9rem; margin-bottom: 0.25rem;">Ounces (optional)</label>
+                        <input 
+                            type="number" 
+                            id="powderOz" 
+                            placeholder="0"
+                            min="0"
+                            max="15.999"
+                            step="0.1"
+                            inputmode="decimal"
+                        >
+                    </div>
+                </div>
+                <div id="powderGramField" style="display: none; margin-top: 0.5rem;">
+                    <label for="powderG" style="font-size: 0.9rem; margin-bottom: 0.25rem;">Grams</label>
                     <input 
                         type="number" 
-                        id="powder" 
-                        placeholder="Enter powder weight"
+                        id="powderG" 
+                        placeholder="0"
                         min="0"
-                        step="0.01"
+                        step="1"
                         inputmode="decimal"
-                        style="flex: 1;"
                     >
-                    <button type="button" class="btn-primary" onclick="calculateWater()" style="padding: 1rem 1.25rem; white-space: nowrap;">Calculate</button>
                 </div>
-                <div class="unit-toggle" aria-label="Select unit">
-                    <button type="button" id="btnLb" class="active" onclick="setUnit('lb')">Pounds (lb)</button>
-                    <button type="button" id="btnG" onclick="setUnit('g')">Grams (g)</button>
+                <div style="margin-top: 0.5rem; display: flex; justify-content: flex-end;">
+                    <button type="button" class="btn-primary" onclick="calculateWater()" style="padding: 1rem 1.25rem; white-space: nowrap;">Calculate</button>
                 </div>
             </div>
 
             <div class="results hidden" id="results">
                 <div class="result-row">
-                    <span class="result-label">Water (g)</span>
-                    <span class="result-value"><span id="waterWeightGVal">0</span><span class="unit">g</span></span>
+                    <span class="result-label">Water needed</span>
+                    <span class="result-value"><span id="waterWeightGVal" class="number">0</span><span class="label-unit">g</span></span>
                 </div>
+                <div style="text-align: center; color: var(--aqua-light); margin: 0.5rem 0; font-weight: 500;">or</div>
                 <div class="result-row">
-                    <span class="result-label">Water (lb)</span>
-                    <span class="result-value"><span id="waterWeightLbVal">0</span><span class="unit">lb</span></span>
-                </div>
-                <div class="result-row">
-                    <span class="result-label">Water (ml)</span>
-                    <span class="result-value"><span id="waterVolumeVal">0</span><span class="unit">ml</span></span>
-                </div>
-                <div class="result-row">
-                    <span class="result-label">Mixing Ratio</span>
-                    <span class="result-value" id="ratio">1:1</span>
+                    <span class="result-label">Water needed</span>
+                    <span class="result-value" id="waterWeightLbOzContainer">0 lb</span>
                 </div>
             </div>
 
@@ -379,31 +445,36 @@
     <div id="addBrandModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Add New Brand</h2>
+                <h2>Manage Glazes</h2>
                 <button type="button" class="close-btn" onclick="closeAddBrandModal()">&times;</button>
             </div>
             <form onsubmit="saveBrand(event)">
                 <div class="form-group">
-                    <label for="brandName">Brand Name *</label>
-                    <input type="text" id="brandName" required placeholder="e.g., Duncan Crystals">
+                    <label for="glazeEntryName">Glaze Name *</label>
+                    <input type="text" id="glazeEntryName" required placeholder="e.g., KY Mudworks - Stonewash">
                 </div>
-                <div class="form-group">
-                    <label for="brandDesc">Description</label>
-                    <input type="text" id="brandDesc" placeholder="Optional notes about this brand">
-                </div>
-                <div class="form-group-inline">
+                <div class="amount-fields-inline">
                     <div class="form-group">
-                        <label for="powderRatio">Powder Ratio *</label>
-                        <input type="number" id="powderRatio" required placeholder="1" min="0.1" step="0.1" value="1">
+                        <label for="singlePowderAmt">Dry Mix Amount (lb) *</label>
+                        <input type="number" id="singlePowderAmt" required placeholder="e.g., 10" min="0.1" step="0.1">
                     </div>
                     <div class="form-group">
-                        <label for="waterRatio">Water Ratio *</label>
-                        <input type="number" id="waterRatio" required placeholder="1" min="0.1" step="0.1" value="1">
+                        <label for="singleWaterAmt">Water Amount (lb) *</label>
+                        <input type="number" id="singleWaterAmt" required placeholder="e.g., 12" min="0.1" step="0.1">
                     </div>
                 </div>
                 <div class="btn-group">
-                    <button type="submit" class="btn-primary">Save Brand</button>
+                    <button type="submit" class="btn-primary">Add</button>
                     <button type="button" class="btn-tertiary" onclick="closeAddBrandModal()">Cancel</button>
+                </div>
+                <div class="form-group" style="margin-top: 1rem;">
+                    <label for="removeGlazeEntry">Remove Existing Glaze</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <select id="removeGlazeEntry" style="flex: 1;">
+                            <option value="">Select glaze to remove...</option>
+                        </select>
+                        <button type="button" class="btn-secondary" onclick="removeSelectedGlazeEntry()">Remove</button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -414,7 +485,7 @@
         let glazeBrands = {};
         const STORAGE_KEY = 'bentn_glaze_brands';
         const LB_TO_G = 453.59237;
-        let currentUnit = 'lb'; // default to pounds for BenTN workflow
+        let powderInputUnit = 'lb-oz';
 
         // Load brands from glazes.json and localStorage on startup
         async function loadBrands() {
@@ -450,88 +521,162 @@
 
         function populateBrandDropdown() {
             const brandSelect = document.getElementById('brand');
-            brandSelect.innerHTML = '<option value="">Select a brand...</option>';
+            brandSelect.innerHTML = '<option value="">Select a glaze...</option>';
             
             Object.keys(glazeBrands).forEach(id => {
                 const brand = glazeBrands[id];
-                const option = document.createElement('option');
-                option.value = id;
-                option.textContent = `${brand.name} (${brand.powderRatio}:${brand.waterRatio})`;
-                brandSelect.appendChild(option);
+
+                if (brand.glazes && brand.glazes.length > 0) {
+                    brand.glazes.forEach((glaze, glazeIndex) => {
+                        const option = document.createElement('option');
+                        option.value = `${id}::${glazeIndex}`;
+                        option.textContent = `${brand.name} - ${glaze.name} (${glaze.waterAmount} water : ${glaze.powderAmount} dry)`;
+                        brandSelect.appendChild(option);
+                    });
+                    return;
+                }
+
+                if (brand.powderRatio && brand.waterRatio) {
+                    const option = document.createElement('option');
+                    option.value = `${id}::legacy`;
+                    option.textContent = brand.name;
+                    brandSelect.appendChild(option);
+                }
             });
+
+            populateRemoveGlazeDropdown();
         }
 
-        function updateRatio() {
-            const brandSelect = document.getElementById('brand');
-            const selectedId = brandSelect.value;
-            
-            if (!selectedId) {
-                document.getElementById('results').classList.add('hidden');
-                return;
-            }
-            
-            calculateWater();
+        function populateRemoveGlazeDropdown() {
+            const removeSelect = document.getElementById('removeGlazeEntry');
+            if (!removeSelect) return;
+
+            removeSelect.innerHTML = '<option value="">Select glaze to remove...</option>';
+
+            Object.keys(glazeBrands).forEach(id => {
+                const brand = glazeBrands[id];
+
+                if (brand.glazes && brand.glazes.length > 0) {
+                    brand.glazes.forEach((glaze, glazeIndex) => {
+                        const option = document.createElement('option');
+                        option.value = `${id}::${glazeIndex}`;
+                        option.textContent = `${brand.name} - ${glaze.name} (${glaze.waterAmount} water : ${glaze.powderAmount} dry)`;
+                        removeSelect.appendChild(option);
+                    });
+                    return;
+                }
+
+                if (brand.powderRatio && brand.waterRatio) {
+                    const option = document.createElement('option');
+                    option.value = `${id}::legacy`;
+                    option.textContent = brand.name;
+                    removeSelect.appendChild(option);
+                }
+            });
         }
 
         function calculateWater() {
             const brandSelect = document.getElementById('brand');
-            const selectedId = brandSelect.value;
-            const powderInput = document.getElementById('powder');
-            const powderAmount = parseFloat(powderInput.value);
+            const selectedValue = brandSelect.value;
+            const powderLb = parseFloat(document.getElementById('powderLb').value) || 0;
+            const powderOz = parseFloat(document.getElementById('powderOz').value) || 0;
+            const powderG = parseFloat(document.getElementById('powderG').value) || 0;
+
+            let powderInGrams = 0;
+            if (powderInputUnit === 'lb-oz') {
+                const totalPowderLb = powderLb + (powderOz / 16);
+                powderInGrams = totalPowderLb * LB_TO_G;
+            } else {
+                powderInGrams = powderG;
+            }
             
-            if (!selectedId || !powderAmount || powderAmount <= 0) {
+            if (!selectedValue || powderInGrams <= 0) {
                 document.getElementById('results').classList.add('hidden');
                 return;
             }
 
-            const brand = glazeBrands[selectedId];
-            // Convert input to grams for calculation
-            const powderInGrams = currentUnit === 'lb' ? powderAmount * LB_TO_G : powderAmount;
-            const waterNeededGrams = (powderInGrams * brand.waterRatio) / brand.powderRatio;
+            const [selectedBrandId, selectedGlazeIndex] = selectedValue.split('::');
+            const brand = glazeBrands[selectedBrandId];
+            if (!brand) {
+                document.getElementById('results').classList.add('hidden');
+                return;
+            }
+
+            let waterRatio = 0;
+            let powderRatio = 0;
+
+            if (selectedGlazeIndex === 'legacy' && brand.powderRatio && brand.waterRatio) {
+                powderRatio = brand.powderRatio;
+                waterRatio = brand.waterRatio;
+            } else if (brand.glazes && brand.glazes[parseInt(selectedGlazeIndex)] ) {
+                const glaze = brand.glazes[parseInt(selectedGlazeIndex)];
+                waterRatio = glaze.waterAmount;
+                powderRatio = glaze.powderAmount;
+            }
+
+            if (!powderRatio || !waterRatio) {
+                document.getElementById('results').classList.add('hidden');
+                return;
+            }
+            
+            const waterNeededGrams = (powderInGrams * waterRatio) / powderRatio;
             const waterNeededLb = waterNeededGrams / LB_TO_G;
+            
+            // Convert pounds to lb + oz format
+            const wholeLbs = Math.floor(waterNeededLb);
+            const remainingGrams = waterNeededGrams - (wholeLbs * LB_TO_G);
+            const oz = remainingGrams / 28.3495; // 1 oz = 28.3495 grams
+            
+            let lbOzDisplay;
+            if (wholeLbs > 0) {
+                lbOzDisplay = `<span class="number">${wholeLbs}</span><span class="label-unit">lb</span> <span class="number">${oz.toFixed(1)}</span><span class="label-unit">oz</span>`;
+            } else {
+                lbOzDisplay = `<span class="number">${oz.toFixed(1)}</span><span class="label-unit">oz</span>`;
+            }
             
             // Update results
             document.getElementById('waterWeightGVal').textContent = waterNeededGrams.toFixed(1);
-            document.getElementById('waterWeightLbVal').textContent = waterNeededLb.toFixed(3);
-            document.getElementById('waterVolumeVal').textContent = waterNeededGrams.toFixed(1);
-            document.getElementById('ratio').textContent = `${brand.powderRatio}:${brand.waterRatio}`;
+            document.getElementById('waterWeightLbOzContainer').innerHTML = lbOzDisplay;
             
             // Show results
             document.getElementById('results').classList.remove('hidden');
         }
 
-        function setUnit(unit) {
-            currentUnit = unit;
-            const unitLabel = document.getElementById('unitLabel');
-            const powderInput = document.getElementById('powder');
-            const btnLb = document.getElementById('btnLb');
-            const btnG = document.getElementById('btnG');
+        function setPowderInputUnit(unit) {
+            powderInputUnit = unit;
+            const btnPowderLbOz = document.getElementById('btnPowderLbOz');
+            const btnPowderG = document.getElementById('btnPowderG');
+            const powderLbOzFields = document.getElementById('powderLbOzFields');
+            const powderGramField = document.getElementById('powderGramField');
 
-            if (unit === 'lb') {
-                unitLabel.textContent = '(lbs)';
-                powderInput.step = '0.01';
-                btnLb.classList.add('active');
-                btnG.classList.remove('active');
+            if (unit === 'lb-oz') {
+                btnPowderLbOz.classList.add('active');
+                btnPowderG.classList.remove('active');
+                powderLbOzFields.style.display = 'flex';
+                powderGramField.style.display = 'none';
+                document.getElementById('powderG').value = '';
             } else {
-                unitLabel.textContent = '(grams)';
-                powderInput.step = '1';
-                btnG.classList.add('active');
-                btnLb.classList.remove('active');
+                btnPowderG.classList.add('active');
+                btnPowderLbOz.classList.remove('active');
+                powderLbOzFields.style.display = 'none';
+                powderGramField.style.display = 'block';
+                document.getElementById('powderLb').value = '';
+                document.getElementById('powderOz').value = '';
             }
+
             calculateWater();
         }
 
         function openAddBrandModal() {
             document.getElementById('addBrandModal').classList.add('show');
+            document.getElementById('glazeEntryName').value = '';
+            document.getElementById('singlePowderAmt').value = '';
+            document.getElementById('singleWaterAmt').value = '';
+            populateRemoveGlazeDropdown();
         }
 
         function closeAddBrandModal() {
             document.getElementById('addBrandModal').classList.remove('show');
-            // Clear form
-            document.getElementById('brandName').value = '';
-            document.getElementById('brandDesc').value = '';
-            document.getElementById('powderRatio').value = '1';
-            document.getElementById('waterRatio').value = '1';
         }
 
         function openInfoModal() {
@@ -544,44 +689,103 @@
 
         function saveBrand(event) {
             event.preventDefault();
-            
-            const name = document.getElementById('brandName').value.trim();
-            const desc = document.getElementById('brandDesc').value.trim();
-            const powderRatio = parseFloat(document.getElementById('powderRatio').value);
-            const waterRatio = parseFloat(document.getElementById('waterRatio').value);
 
-            if (!name || !powderRatio || !waterRatio) {
-                alert('Please fill in all required fields');
+            const fullGlazeName = document.getElementById('glazeEntryName').value.trim();
+            const powderAmt = parseFloat(document.getElementById('singlePowderAmt').value);
+            const waterAmt = parseFloat(document.getElementById('singleWaterAmt').value);
+
+            if (!fullGlazeName || !powderAmt || !waterAmt) {
+                alert('Please fill in glaze name, dry mix amount, and water amount.');
                 return;
             }
 
-            // Create unique ID from name (lowercase, no spaces)
-            const id = name.toLowerCase().replace(/\s+/g, '_');
+            const nameParts = fullGlazeName.split(' - ');
+            if (nameParts.length < 2) {
+                alert('Use format: Brand - Glaze (example: KY Mudworks - Stonewash)');
+                return;
+            }
 
-            // Add to brands object
-            glazeBrands[id] = {
-                id: id,
-                name: name,
-                powderRatio: powderRatio,
-                waterRatio: waterRatio,
-                description: desc || ''
-            };
+            const brandName = nameParts[0].trim();
+            const glazeName = nameParts.slice(1).join(' - ').trim();
+            const brandId = brandName.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+
+            if (!glazeBrands[brandId]) {
+                glazeBrands[brandId] = {
+                    id: brandId,
+                    name: brandName,
+                    glazes: []
+                };
+            }
+
+            const targetBrand = glazeBrands[brandId];
+
+            if (!targetBrand.glazes) {
+                targetBrand.glazes = [];
+            }
+
+            const existingGlazeIndex = targetBrand.glazes.findIndex(
+                glaze => glaze.name.toLowerCase() === glazeName.toLowerCase()
+            );
+
+            if (existingGlazeIndex >= 0) {
+                targetBrand.glazes[existingGlazeIndex] = {
+                    name: glazeName,
+                    powderAmount: powderAmt,
+                    waterAmount: waterAmt
+                };
+            } else {
+                targetBrand.glazes.push({
+                    name: glazeName,
+                    powderAmount: powderAmt,
+                    waterAmount: waterAmt
+                });
+            }
 
             // Save to localStorage
             localStorage.setItem(STORAGE_KEY, JSON.stringify(glazeBrands));
 
-            // Update dropdown and close modal
+            // Update dropdowns and close modal
             populateBrandDropdown();
             closeAddBrandModal();
+            alert(`Added: ${brandName} - ${glazeName}`);
+        }
 
-            // Show success message
-            alert(`Brand "${name}" added successfully! Don't forget to export and commit to the repo.`);
+        function removeSelectedGlazeEntry() {
+            const removeSelect = document.getElementById('removeGlazeEntry');
+            const selectedValue = removeSelect.value;
+
+            if (!selectedValue) {
+                alert('Select a glaze to remove first.');
+                return;
+            }
+
+            const [brandId, glazeIndex] = selectedValue.split('::');
+            const brand = glazeBrands[brandId];
+
+            if (!brand) {
+                return;
+            }
+
+            if (glazeIndex === 'legacy') {
+                delete glazeBrands[brandId];
+            } else if (brand.glazes && brand.glazes[parseInt(glazeIndex)]) {
+                brand.glazes.splice(parseInt(glazeIndex), 1);
+
+                if (brand.glazes.length === 0) {
+                    delete glazeBrands[brandId];
+                }
+            }
+
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(glazeBrands));
+            populateBrandDropdown();
+            document.getElementById('results').classList.add('hidden');
+            removeSelect.value = '';
         }
 
         // Close modal when clicking outside
         document.addEventListener('DOMContentLoaded', () => {
             loadBrands();
-            setUnit('lb');
+            setPowderInputUnit('lb-oz');
         });
 
         const modal = document.getElementById('addBrandModal');
