@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bentn-glaze-v1';
+const CACHE_NAME = 'bentn-glaze-v5';
 const CORE_ASSETS = [
   './',
   './index.html',
