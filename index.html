@@ -3,7 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#2d5f7a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="BenTN Glaze">
     <title>BenTN Pottery - Glaze Mixing Calculator</title>
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
     <link rel="stylesheet" href="color-theme.css">
     <style>
         html, body {
@@ -786,6 +793,12 @@
         document.addEventListener('DOMContentLoaded', () => {
             loadBrands();
             setPowderInputUnit('lb-oz');
+
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/sw.js').catch((error) => {
+                    console.warn('Service worker registration failed:', error);
+                });
+            }
         });
 
         const modal = document.getElementById('addBrandModal');
