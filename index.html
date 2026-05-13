@@ -8,9 +8,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="BenTN Glaze">
     <title>BenTN Pottery - Glaze Mixing Calculator</title>
-    <link rel="manifest" href="manifest.webmanifest">
-    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+    <link rel="manifest" href="./manifest.webmanifest">
+    <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon.png">
     <link rel="stylesheet" href="color-theme.css">
     <style>
         html, body {
@@ -795,7 +795,7 @@
             setPowderInputUnit('lb-oz');
 
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('/sw.js').catch((error) => {
+                navigator.serviceWorker.register('./sw.js').catch((error) => {
                     console.warn('Service worker registration failed:', error);
                 });
             }
