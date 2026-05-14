@@ -36,10 +36,9 @@
         .container {
             max-width: 640px;
             width: 100%;
-            height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            overflow: visible;
         }
 
         header {
@@ -65,8 +64,6 @@
             border-radius: 1rem;
             padding: 1rem;
             box-shadow: 0 4px 6px rgba(26, 58, 82, 0.1);
-            flex: 1;
-            overflow-y: auto;
             display: flex;
             flex-direction: column;
         }
@@ -233,25 +230,126 @@
         }
 
         @media (max-width: 420px) {
+            body {
+                padding: 0.45rem;
+            }
+
+            header {
+                margin-bottom: 0.45rem;
+            }
+
+            h1 {
+                font-size: 1.35rem;
+            }
+
+            .subtitle {
+                font-size: 0.82rem;
+            }
+
+            .calculator-card {
+                padding: 0.75rem;
+            }
+
+            .form-group {
+                margin-bottom: 1rem;
+            }
+
+            label {
+                margin-bottom: 0.35rem;
+                font-size: 0.92rem;
+            }
+
+            select, input[type="number"], input[type="text"] {
+                padding: 0.75rem;
+                font-size: 0.95rem;
+            }
+
+            .powder-header-row {
+                gap: 0.45rem;
+            }
+
+            .powder-header-row .unit-toggle button {
+                padding: 0.5rem 0.7rem;
+                font-size: 0.82rem;
+            }
+
+            .powder-input-row {
+                margin-top: 0.35rem;
+                gap: 0.35rem;
+                justify-content: center;
+            }
+
+            .compact-fields {
+                gap: 0.3rem;
+            }
+
+            #powderLbOzFields {
+                display: grid !important;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 0.35rem;
+                width: min(100%, 360px);
+                margin: 0 auto;
+            }
+
+            #powderLbOzFields .compact-field {
+                min-width: 0;
+                width: 100%;
+            }
+
+            .compact-number-input,
+            .compact-number-input.gram {
+                width: 100%;
+                min-width: 0;
+                -webkit-appearance: none;
+                appearance: none;
+            }
+
+            .compact-field label {
+                font-size: 0.74rem;
+            }
+
+            #powderGramField {
+                width: min(100%, 180px);
+                margin: 0 auto;
+            }
+
+            .compact-number-input,
+            .compact-number-input.gram {
+                padding: 0.42rem 0.3rem;
+                font-size: 0.88rem;
+            }
+
+            .action-buttons {
+                margin-top: 0.55rem;
+                gap: 0.4rem;
+            }
+
+            .btn-danger,
+            .btn-primary {
+                padding: 0.65rem 0.85rem !important;
+                font-size: 0.92rem;
+            }
+
             .results {
-                padding: 1.1rem 0.85rem 1rem;
+                margin-top: 1.25rem;
+                padding: 0.95rem 0.75rem 0.85rem;
             }
 
             .result-group {
-                padding: 0.6rem;
+                padding: 0.55rem 0.5rem;
             }
 
             .result-group-title {
-                font-size: 0.82rem;
-                margin-bottom: 0.35rem;
+                font-size: 0.78rem;
+                margin-bottom: 0.28rem;
             }
 
             .result-option {
-                padding: 0.4rem 0.35rem;
+                padding: 0.35rem 0.3rem;
             }
 
             .result-or {
-                font-size: 0.74rem;
+                font-size: 0.7rem;
             }
         }
 
